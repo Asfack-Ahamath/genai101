@@ -1,117 +1,695 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="light">
 <head>
-<title>Random Dolphin Facts</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f8ff; /* Light blue background */
-    margin: 0;
-    overflow: hidden; /* Prevent scrollbars due to button movement */
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Facts Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Copy all content from style.css here */
+        :root[data-theme="light"] {
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --secondary-color: #7c3aed;
+            --background-color: #f8fafc;
+            --background-gradient-1: #f5f7fa;
+            --background-gradient-2: #c3cfe2;
+            --card-background: #ffffff;
+            --fact-container-bg: #f8f9fa;
+            --text-color: #2c3e50;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shape-color-1: rgba(74, 144, 226, 0.3);
+            --shape-color-2: rgba(44, 62, 80, 0.2);
+            --card-background-rgb: 255, 255, 255;
+            --gradient-1: rgba(147, 51, 234, 0.5);  /* Vibrant purple */
+            --gradient-2: rgba(59, 130, 246, 0.5);  /* Bright blue */
+            --gradient-3: rgba(236, 72, 153, 0.4);  /* Pink */
+            --gradient-4: rgba(34, 197, 94, 0.4);   /* Green */
+            --shape-opacity: 0.25;
+            --blur-intensity: 60px;
+            --blend-mode: soft-light;
+        }
 
-  .container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); 
-    text-align: center;
-    max-width: 80%; /* Limit container width to prevent overflow */
-  }
+        :root[data-theme="dark"] {
+            --primary-color: #60a5fa;
+            --primary-hover: #3b82f6;
+            --secondary-color: #a78bfa;
+            --background-color: #0f172a;
+            --background-gradient-1: #1a1a1a;
+            --background-gradient-2: #2d3748;
+            --card-background: #2d3748;
+            --fact-container-bg: #1f2937;
+            --text-color: #e2e8f0;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shape-color-1: rgba(96, 165, 250, 0.2);
+            --shape-color-2: rgba(226, 232, 240, 0.1);
+            --card-background-rgb: 45, 55, 72;
+            --gradient-1: rgba(139, 92, 246, 0.5);  /* Purple */
+            --gradient-2: rgba(14, 165, 233, 0.5);  /* Cyan */
+            --gradient-3: rgba(249, 115, 22, 0.4);  /* Orange */
+            --gradient-4: rgba(234, 179, 8, 0.4);   /* Yellow */
+            --shape-opacity: 0.4;
+            --blur-intensity: 80px;
+            --blend-mode: screen;
+        }
 
-  #fact-container {
-    margin-bottom: 20px;
-    font-size: 1.2em;
-  }
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--background-color);
+            background-image: linear-gradient(135deg, var(--background-gradient-1) 0%, var(--background-gradient-2) 100%);
+            transition: background-color 0.3s ease, background-image 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-  button {
-    background-color: #4CAF50; /* Green button */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
+        .container {
+            text-align: center;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            background: rgba(var(--card-background-rgb), 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
 
-  button:hover {
-    background-color: #45a049; /* Darker green on hover */
-  }
-</style>
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h1 i {
+            color: var(--primary-color);
+        }
+
+        .fact-container {
+            background: var(--fact-container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .fact-container:hover {
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        #fact-display {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            padding: 1rem;
+            min-height: 100px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            font-size: 2rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            transition: color 0.3s ease;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(var(--primary-color), 0.3);
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(var(--primary-color), 0.4);
+        }
+
+        button i {
+            font-size: 1.1rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: color 0.3s ease;
+        }
+
+        footer i {
+            color: #e74c3c;
+            margin: 0 3px;
+            transition: color 0.3s ease;
+        }
+
+        footer a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Animation for fact transition */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 92%;
+                padding: 1.2rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                gap: 8px;
+                margin-bottom: 1.5rem;
+            }
+
+            .fact-container {
+                padding: 1rem;
+                margin: 1.5rem 0;
+            }
+
+            #fact-display {
+                font-size: 1rem;
+                line-height: 1.6;
+                padding: 0.8rem;
+                min-height: 80px;
+            }
+
+            .quote-icon {
+                font-size: 1.5rem;
+                top: -12px;
+                left: -12px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                gap: 8px;
+            }
+
+            button i {
+                font-size: 0.95rem;
+            }
+
+            .theme-switch {
+                top: 12px;
+                right: 12px;
+            }
+
+            #theme-toggle {
+                padding: 8px;
+                font-size: 1rem;
+            }
+
+            footer {
+                margin-top: 1.5rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+                margin: 0.8rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                gap: 6px;
+                margin-bottom: 1.2rem;
+                flex-direction: column;
+            }
+
+            h1 i {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .fact-container {
+                padding: 0.8rem;
+                margin: 1.2rem 0;
+            }
+
+            #fact-display {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                padding: 0.6rem;
+                min-height: 70px;
+            }
+
+            .quote-icon {
+                font-size: 1.2rem;
+                top: -10px;
+                left: -10px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 280px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                justify-content: center;
+            }
+
+            .theme-switch {
+                top: 8px;
+                right: 8px;
+            }
+
+            #theme-toggle {
+                padding: 6px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .fact-container {
+                margin: 1rem 0;
+            }
+
+            #fact-display {
+                min-height: 60px;
+            }
+
+            button {
+                padding: 8px 16px;
+            }
+
+            footer {
+                margin-top: 1rem;
+            }
+        }
+
+        /* For very small devices */
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            #fact-display {
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.85rem;
+                padding: 8px 14px;
+            }
+
+            .theme-switch {
+                top: 6px;
+                right: 6px;
+            }
+
+            #theme-toggle {
+                padding: 5px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* For tablets in portrait mode */
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+            .container {
+                width: 85%;
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            #fact-display {
+                font-size: 1.1rem;
+                min-height: 90px;
+            }
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        #theme-toggle {
+            background-color: var(--card-background);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        #theme-toggle:hover {
+            transform: translateY(-2px) rotate(15deg);
+            box-shadow: 0 6px 15px var(--shadow-color);
+        }
+
+        /* Background Animation Elements */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--background-color);
+        }
+
+        .shape {
+            position: absolute;
+            transform-origin: center;
+            opacity: var(--shape-opacity);
+            mix-blend-mode: var(--blend-mode);
+            transition: all 0.5s ease;
+        }
+
+        .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, 
+                var(--gradient-1),
+                var(--gradient-2)
+            );
+            filter: blur(var(--blur-intensity));
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: morph1 20s ease-in-out infinite;
+            top: 10%;
+            left: 25%;
+        }
+
+        .shape:nth-child(2) {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(-45deg,
+                var(--gradient-3),
+                var(--gradient-4)
+            );
+            filter: blur(var(--blur-intensity));
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph2 18s ease-in-out infinite;
+            bottom: 15%;
+            right: 25%;
+        }
+
+        .shape:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg,
+                var(--gradient-2),
+                var(--gradient-3)
+            );
+            filter: blur(var(--blur-intensity));
+            border-radius: 50% 50% 30% 70% / 50% 50% 70% 60%;
+            animation: morph3 25s ease-in-out infinite;
+            top: 50%;
+            left: 15%;
+        }
+
+        .shape:nth-child(4) {
+            width: 380px;
+            height: 380px;
+            background: linear-gradient(-45deg,
+                var(--gradient-4),
+                var(--gradient-1)
+            );
+            filter: blur(var(--blur-intensity));
+            border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            animation: morph4 22s ease-in-out infinite;
+            top: 20%;
+            right: 15%;
+        }
+
+        /* Enhanced animation keyframes */
+        @keyframes morph1 {
+            0%, 100% {
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+                transform: rotate(0deg) scale(1) translate(0, 0);
+            }
+            50% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(180deg) scale(1.3) translate(-100px, 50px);
+            }
+        }
+
+        @keyframes morph2 {
+            0%, 100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(0deg) scale(1) translate(0, 0);
+            }
+            50% {
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+                transform: rotate(-180deg) scale(1.4) translate(100px, -50px);
+            }
+        }
+
+        @keyframes morph3 {
+            0%, 100% {
+                border-radius: 50% 50% 30% 70% / 50% 50% 70% 60%;
+                transform: rotate(0deg) scale(1) translate(0, 0);
+            }
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: rotate(90deg) scale(1.2) translate(80px, 80px);
+            }
+        }
+
+        @keyframes morph4 {
+            0%, 100% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: rotate(0deg) scale(1) translate(0, 0);
+            }
+            50% {
+                border-radius: 50% 50% 30% 70% / 50% 50% 70% 60%;
+                transform: rotate(-90deg) scale(1.5) translate(-80px, -80px);
+            }
+        } 
+        /* Include all CSS content up to the last closing brace */
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div id="fact-container">Hover the button to reveal a fact!</div>
-    <button id="fact-button">Show me a fact</button>
-  </div>
+    <div class="background-animation">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="theme-switch">
+        <button id="theme-toggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    <div class="container">
+        <h1><i class="fas fa-lightbulb"></i> Fun Facts Generator</h1>
+        <div class="fact-container">
+            <div id="fact-display">
+                <i class="fas fa-quote-left quote-icon"></i>
+                <p>Click the button to generate a fun fact!</p>
+            </div>
+        </div>
+        <button onclick="generateFact()">
+            <i class="fas fa-random"></i>
+            Generate Another Fact
+        </button>
+    </div>
+    <footer>
+        <p>Made with <i class="fas fa-heart"></i> By <a href="https://www.linkedin.com/in/ahamath/" target="_blank" rel="noopener noreferrer">Ahamath</a></p>
+    </footer>
 
-  <script>
-    const facts = [
-      "Dolphins are marine mammals, not fish.",
-      "They are part of the toothed whale family, which also includes orcas and pilot whales.",
-      "Dolphins are highly intelligent and social animals, living in pods that can number in the dozens or even hundreds.",
-      "They communicate with each other using a variety of clicks, whistles, and other vocalizations.",
-      "Dolphins are known for their playful behavior and often engage in activities like surfing waves and leaping out of the water.",
-      "They use echolocation to navigate and hunt, emitting sound waves and interpreting the echoes that bounce back.",
-      "Dolphins are carnivores and their diet consists mainly of fish, squid, and crustaceans.",
-      "The bottlenose dolphin is one of the most well-known and widespread dolphin species.",
-      "Some dolphin species are endangered due to threats like habitat loss, pollution, and fishing gear entanglement.",
-      "Dolphins have a fusiform body shape, which helps them to swim efficiently through the water."
-    ];
-
-    const factContainer = document.getElementById('fact-container');
-    const factButton = document.getElementById('fact-button');
-
-    let attempts = 0;
-    let buttonClickable = false;
-
-    function getRandomFact() {
-      const randomIndex = Math.floor(Math.random() * facts.length);
-      return facts[randomIndex];
-    }
-
-    function displayFact() {
-      if (buttonClickable) {
-        factContainer.textContent = getRandomFact();
-      }
-    }
-
-    function moveButton(event) {
-      if (attempts < 3 && !buttonClickable) {
-        const buttonRect = factButton.getBoundingClientRect();
-        const maxX = window.innerWidth - buttonRect.width;
-        const maxY = window.innerHeight - buttonRect.height;
-
-        let newX = event.clientX + (Math.random() * 100 - 50);
-        let newY = event.clientY + (Math.random() * 100 - 50);
-
-        // Keep button within viewport
-        newX = Math.max(0, Math.min(newX, maxX));
-        newY = Math.max(0, Math.min(newY, maxY));
-
-        factButton.style.position = 'absolute';
-        factButton.style.left = newX + 'px';
-        factButton.style.top = newY + 'px';
-      }
-    }
-
-    factButton.addEventListener('mouseover', () => {
-      if (!buttonClickable) {
-        attempts++;
-        if (attempts >= 3) {
-          buttonClickable = true;
-          factButton.textContent = "Click to Reveal"; 
+    <script>
+        // Copy all content from script.js here
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            
+            // Update the icon
+            themeToggle.innerHTML = `<i class="fas fa-${newTheme === 'light' ? 'moon' : 'sun'}"></i>`;
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', newTheme);
         }
-      }
-    });
 
-    factButton.addEventListener('click', displayFact);
-  </script>
+        const facts = [
+            "Cats are crepuscular, which means they are most active during dawn and dusk.",
+            "A cat's nose print is unique, just like a human fingerprint.",
+            "Cats can jump up to six times their height.",
+            "The average cat sleeps for about 12-16 hours a day.",
+            "Cats have a third eyelid, called a nictitating membrane, that helps protect their eyes.",
+            "A group of cats is called a clowder.",
+            "Cats can make over 100 different vocalizations, while dogs can only make about 10.",
+            "The oldest known cat lived to be 38 years old.",
+            "Cats use their whiskers to help them navigate and sense their environment.",
+            "Cats have a specialized 'purr box' in their throat that can vibrate at a variety of frequencies."
+        ];
+
+        function generateFact() {
+            const factDisplay = document.getElementById('fact-display');
+            const randomIndex = Math.floor(Math.random() * facts.length);
+            
+            // Add fade-out effect
+            factDisplay.style.opacity = '0';
+            factDisplay.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                factDisplay.innerHTML = `
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>${facts[randomIndex]}</p>
+                `;
+                
+                // Add fade-in effect
+                factDisplay.style.opacity = '1';
+                factDisplay.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        function updateBackgroundAnimation() {
+            const shapes = document.querySelectorAll('.shape');
+            const mouseX = window.mouseX || 0;
+            const mouseY = window.mouseY || 0;
+            
+            shapes.forEach((shape, index) => {
+                const rect = shape.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const deltaX = mouseX - centerX;
+                const deltaY = mouseY - centerY;
+                
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                const maxDistance = Math.max(window.innerWidth, window.innerHeight) / 2;
+                const intensity = (1 - Math.min(distance / maxDistance, 1)) * 30;
+                
+                const moveX = (deltaX / distance) * intensity * (index + 1) * 0.2;
+                const moveY = (deltaY / distance) * intensity * (index + 1) * 0.2;
+                
+                shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+            
+            requestAnimationFrame(updateBackgroundAnimation);
+        }
+
+        // Update the DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const factDisplay = document.getElementById('fact-display');
+            factDisplay.style.transition = 'all 0.3s ease';
+            
+            // Set up theme toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                themeToggle.innerHTML = `<i class="fas fa-${savedTheme === 'light' ? 'moon' : 'sun'}"></i>`;
+            }
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                targetX = e.clientX;
+                targetY = e.clientY;
+            });
+            
+            function updateMousePosition() {
+                mouseX += (targetX - mouseX) * 0.1;
+                mouseY += (targetY - mouseY) * 0.1;
+                
+                window.mouseX = mouseX;
+                window.mouseY = mouseY;
+                
+                requestAnimationFrame(updateMousePosition);
+            }
+            
+            updateMousePosition();
+            updateBackgroundAnimation();
+        }); 
+        // Include all JavaScript content up to the last closing brace
+    </script>
 </body>
 </html>
-
