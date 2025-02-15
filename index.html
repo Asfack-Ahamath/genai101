@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Random Dolphin Facts</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f8ff; /* Light blue background */
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars due to button movement */
+  }
+
+  .container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    max-width: 80%; /* Limit container width to prevent overflow */
+  }
+
+  #fact-container {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+  }
+
+  button {
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div id="fact-container">Hover the button to reveal a fact!</div>
+    <button id="fact-button">Show me a fact</button>
+  </div>
+
+  <script>
+    const facts = [
+      "Dolphins are marine mammals, not fish.",
+      "They are part of the toothed whale family, which also includes orcas and pilot whales.",
+      "Dolphins are highly intelligent and social animals, living in pods that can number in the dozens or even hundreds.",
+      "They communicate with each other using a variety of clicks, whistles, and other vocalizations.",
+      "Dolphins are known for their playful behavior and often engage in activities like surfing waves and leaping out of the water.",
+      "They use echolocation to navigate and hunt, emitting sound waves and interpreting the echoes that bounce back.",
+      "Dolphins are carnivores and their diet consists mainly of fish, squid, and crustaceans.",
+      "The bottlenose dolphin is one of the most well-known and widespread dolphin species.",
+      "Some dolphin species are endangered due to threats like habitat loss, pollution, and fishing gear entanglement.",
+      "Dolphins have a fusiform body shape, which helps them to swim efficiently through the water."
+    ];
+
+    const factContainer = document.getElementById('fact-container');
+    const factButton = document.getElementById('fact-button');
+
+    let attempts = 0;
+    let buttonClickable = false;
+
+    function getRandomFact() {
+      const randomIndex = Math.floor(Math.random() * facts.length);
+      return facts[randomIndex];
+    }
+
+    function displayFact() {
+      if (buttonClickable) {
+        factContainer.textContent = getRandomFact();
+      }
+    }
+
+    function moveButton(event) {
+      if (attempts < 3 && !buttonClickable) {
+        const buttonRect = factButton.getBoundingClientRect();
+        const maxX = window.innerWidth - buttonRect.width;
+        const maxY = window.innerHeight - buttonRect.height;
+
+        let newX = event.clientX + (Math.random() * 100 - 50);
+        let newY = event.clientY + (Math.random() * 100 - 50);
+
+        // Keep button within viewport
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
+
+        factButton.style.position = 'absolute';
+        factButton.style.left = newX + 'px';
+        factButton.style.top = newY + 'px';
+      }
+    }
+
+    factButton.addEventListener('mouseover', () => {
+      if (!buttonClickable) {
+        attempts++;
+        if (attempts >= 3) {
+          buttonClickable = true;
+          factButton.textContent = "Click to Reveal"; 
+        }
+      }
+    });
+
+    factButton.addEventListener('click', displayFact);
+  </script>
+</body>
+</html>
+
